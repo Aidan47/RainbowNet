@@ -1,0 +1,9 @@
+Goal: 
+
+Test to what extent the a cnn can identify the task/obj based on a given observation
+    
+    - Identify tasks regardless of obs size
+    
+    - Differentiate between tasks whos obs shape are identical
+    
+    - Identify tasks regardless of obs position

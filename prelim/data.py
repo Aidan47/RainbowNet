@@ -1,9 +1,5 @@
 import gymnasium as gym
 import numpy as np
-import matplotlib.pyplot as plt
-import os
-
-# can a cnn identify the game based on obs state
 
 def collect(game, trials=320):
     data = []

@@ -1,4 +1,3 @@
-from re import L
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -22,9 +21,9 @@ class CNN(nn.Module):
         outputs = []
         for conv in self.convs:
             x = F.relu(conv(x))
-            outputs.append(F.adaptive_max_pool1d(x, 1).squeeze(-1))
+            outputs.append(F.adaptive_max_pool1d(x, 1).squeeze(-1))     # for takes max value from each filter/channel
         
-        concatenated = torch.cat(outputs, 1)    # reducing all filters to 1 of the same dimension (matrix -> vector)
+        concatenated = torch.cat(outputs, 1)    # reducing all filters to one of the same dimension (matrix -> vector || 3d tensor -> matrix)
         
         logit = self.fc(concatenated)
         return F.softmax(logit, dim=1)

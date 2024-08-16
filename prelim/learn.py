@@ -40,8 +40,7 @@ if __name__ == "__main__":
     criterion = nn.CrossEntropyLoss()
     '''
     
-    
-    epoch = 100
+    epochs = 100
     for i in range(epochs):
         for x, y in dataloader:
             # forward
@@ -54,4 +53,4 @@ if __name__ == "__main__":
             '''
             pass
         pass
-        
+    

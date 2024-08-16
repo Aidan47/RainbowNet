@@ -14,6 +14,7 @@ def collect(game, trials=320):
         trials -= 1
     return np.array(data, dtype=object)
 
+
 if __name__ == "__main__":
     games = ["Humanoid-v4", "HumanoidStandup-v4", "Hopper-v4"]
 

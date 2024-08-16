@@ -4,7 +4,6 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-
 class CNN(nn.Module):
     def __init__(self, out_channels:int):
         super(CNN, self).__init__()

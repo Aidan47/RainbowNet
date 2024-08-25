@@ -7,3 +7,20 @@ Test to what extent the a cnn can identify the task/obj based on a given observa
     - Differentiate between tasks whos obs shape are identical
     
     - Identify tasks regardless of obs position
+
+
+Outcome:
+
+    - The model was able to identify the task regardless of the obs size
+    
+    - The model was able to differentiate between tasks whos obs shape are identical some of the time
+
+
+Takeaway:
+
+    - Although the model inconsistently identified tasks with identical obs shapes, it was able 
+        to identify tasks regardless of obs size and position
+
+    - The CNN architecture used takes a vector of variable size but reduces the ouput between each convolution to
+        maintain dimensionality for the fully connected layer. When classifiying tasks with identical obs shapes the model may have
+        difficulty differentiating between tasks, since the maxpooling reduces information in a way the rainbow net does not.

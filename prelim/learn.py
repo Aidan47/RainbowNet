@@ -1,56 +1,34 @@
-import model
+from model import CNN
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 import numpy as np
 import matplotlib.pyplot as plt
-
-def process(data): # Process the data
-    X = data[:, 0].reshape(-1, 1)
-    
-    # Convert Y values to one-hot encoding
-    Y = np.zeros((len(data), 3))
-    pos = [games.index(i) for i in data[:, 1]]
-    Y[np.arange(len(data)), pos] = 1
-    
-    # Split the data into training and testing sets
-    X_train, Y_train = X[:int(len(data)*0.8)], Y[:int(len(data)*0.8)]
-    X_test, Y_test = X[int(len(Y)*0.8):], Y[int(len(data)*.8):]
-    
-    return X_train, Y_train, X_test, Y_test
-    
     
 if __name__ == "__main__":
-    games = ["Humanoid-v4", "HumanoidStandup-v4", "Hopper-v4"]
-    data = np.load("gameData.npy", allow_pickle=True)
+    data = np.load('gameData.npz', allow_pickle=True)
+    X_train, Y_train, X_test, Y_test = data['array1'], data['array2'], data['array3'], data['array4']
     
-    X_train, Y_train, X_test, Y_test = process(data)
+    model = CNN(64).float()             # initialize model
+    criterion = nn.CrossEntropyLoss()   # choose the loss optimizer and stuff
+    optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)
     
-    dataset = TensorDataset(torch.Tensor(X_train), torch.Tensor(Y_train))
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-    
-    # initialize model
-    '''
-    model = ...
-    '''
-    
-    # choose the loss optimizer and stuff
-    '''
-    criterion = nn.CrossEntropyLoss()
-    '''
-    
-    epochs = 100
+    epochs = 5
     for i in range(epochs):
-        for x, y in dataloader:
+        for j in range(X_train.size):
+            x, y = torch.tensor(X_train[j]), torch.tensor(Y_train[j])   # single training example
+            
             # forward
-            # output = model(x)
-            # loss = criterion(output, y)
+            output = model(x.float())
+            loss = criterion(output, np.argmax(y))
             
             # backward
-            '''
-                    review pytorch syntax & its motivation (YT Videos)
-            '''
-            pass
-        pass
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+        
+        if (i+1) % 1 == 0:
+            print(f"Epoch: {i+1}    Loss: {loss}")
     
+    torch.save(model, "model")

@@ -9,9 +9,10 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         
         self.l1 = nn.Linear(input, h)
-        self.l1 = nn.Linear(h, h)
-        self.l2 = nn.Linear(h, latent)
-        
+        self.l2 = nn.Linear(h, h)
+        self.l3 = nn.Linear(h, latent)
+    
     def forward(self, x):
         x = F.relu(self.l1(x))
-        return F.relu(self.l2(x))
+        x = F.relu(self.l2(x))
+        return F.relu(self.l3(x))

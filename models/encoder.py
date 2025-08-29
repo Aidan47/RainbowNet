@@ -12,7 +12,10 @@ class Encoder(nn.Module):
         self.l2 = nn.Linear(h1, h2)
         self.l3 = nn.Linear(h2, h2)
         self.l4 = nn.Linear(h2, latent)
-        self.norm = kwargs.get('norm', True)
+        
+        self.norm = kwargs.get('norm', False)
+        if self.norm:
+            self.normalize = nn.LayerNorm(latent)
     
     def forward(self, x):
         x = F.relu(self.l1(x))
@@ -20,5 +23,5 @@ class Encoder(nn.Module):
         x = F.relu(self.l3(x))
         x = self.l4(x)
         if self.norm:
-            x = self.norm(x)
+            x = self.normalize(x)
         return F.relu(x)

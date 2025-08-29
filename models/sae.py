@@ -12,12 +12,13 @@ class SAE(nn.Module):
         super(SAE, self).__init__()
         
         # get layer dimensions
-        encoder_H = pow(2, int(log2(input)) + 1)
-        latent = latent_factor * encoder_H
+        h1 = pow(2, int(log2(input)) + 1)
+        h2 = 2 * h1 if latent_factor > 2 else 0
+        latent = latent_factor * h1
         
         # make models
-        self.encoder = Encoder(input, encoder_H, latent)
-        self.decoder = Decoder(latent, output)
+        self.encoder = Encoder(input, h1, h2, latent, norm=True)
+        self.decoder = Decoder(latent, input)
 
         self.z = torch.Tensor([])
         

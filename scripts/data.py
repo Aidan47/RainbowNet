@@ -6,16 +6,17 @@ import torch
 
 
 class DataLoader:
-    def __init__(self, **kwargs):
+    def __init__(self, layer_norm, **kwargs):
         # dataset split
         file_size   = 1e5
         self.Train  = [0, int(kwargs.get("train", 0.9) * file_size)]
         self.Val    = [self.Train[1], self.Train[1]+int(kwargs.get("val", 0.05) * file_size)]
-        self.Test   = [self.Val[1], self.Val[1]+int(kwargs.get("val", 0.05) * file_size)]
+        self.Test   = [self.Val[1], self.Val[1]+int(kwargs.get("test", 0.05) * file_size)]
         
         HERE = Path(__file__).resolve().parent
         ROOT = HERE.parent
-        self.path   = ROOT / "datasets"
+        norm_folder = "norm" if layer_norm else "pre_norm"
+        self.path   = ROOT / f"datasets/{norm_folder}"
         self.idx    = 0    
         
     def get_files(self):

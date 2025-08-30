@@ -60,7 +60,7 @@ def train(dataset, sae, topk, lr=1e-3, weight_decay=1e-4, beta=5e-6, batch_size=
                     trained = True
                     
             # print info
-            print(f"epoch: {step}, loss: {avg:.2f}, val loss: {avg_val:.2f}, l0 norm: {l0_norm:.1f}")
+            print(f"step: {step}, loss: {avg:.2f}, val loss: {avg_val:.2f}, l0 norm: {l0_norm:.1f}")
         step += 1
         
     sae.save()
@@ -69,9 +69,11 @@ def train(dataset, sae, topk, lr=1e-3, weight_decay=1e-4, beta=5e-6, batch_size=
 if __name__ == "__main__":
     # if using topk
     topk = True if sys.argv[1].lower() == "true" else False
+    # if training on pre/post norm states
+    norm = True if sys.argv[2].lower() == "true" else False
     
     # initialize models & dataset
-    sae = SAE(348, 4, 348)
-    dataset = DataLoader()
+    sae = SAE(348, 4, 348, layer_norm=norm)
+    dataset = DataLoader(layer_norm=norm)
     
     train(dataset, sae, topk)

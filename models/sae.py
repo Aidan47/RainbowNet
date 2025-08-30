@@ -8,7 +8,7 @@ from .decoder import Decoder
 
 
 class SAE(nn.Module):
-    def __init__(self, input: int, latent_factor: int, output: int, **kwargs):
+    def __init__(self, input: int, latent_factor: int, output: int, layer_norm: bool):
         super(SAE, self).__init__()
         
         # get layer dimensions
@@ -17,8 +17,8 @@ class SAE(nn.Module):
         latent = latent_factor * h1
         
         # make models
-        norm = kwargs.get("layer_norm", False)
-        self.encoder = Encoder(input, h1, h2, latent, norm=norm)
+        self.layer_norm = layer_norm
+        self.encoder = Encoder(input, h1, h2, latent, self.layer_norm)
         self.decoder = Decoder(latent, input)
 
         self.z = torch.Tensor([])
@@ -28,7 +28,7 @@ class SAE(nn.Module):
             x = torch.from_numpy(x).float()
         return x
     
-    def topk(self, x, k=32):
+    def topk(self, x, k=16):
         top_k_values, _ = torch.topk(x, k)
         kth_value = top_k_values[:, -1].unsqueeze(-1)
         # a mask to zero out non-top-k values
@@ -68,4 +68,5 @@ class SAE(nn.Module):
         return torch.sum(kl_div)
     
     def save(self):
-        torch.save(self.state_dict(), f"checkpoints/sae/model.pth")
+        norm_folder = "norm" if self.layer_norm else "pre_norm"
+        torch.save(self.state_dict(), f"checkpoints/sae/{norm_folder}/model.pth")

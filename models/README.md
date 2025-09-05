@@ -5,5 +5,11 @@ encoder.py
 
 decoder.py
     input latent representation
+    linear layer (w/o activation)
+    output reconstructed input
+
+translator.py
+    input latent representation
     feed forward layers (w/ decreasing dim)
     decode latent space
+    output action

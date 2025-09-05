@@ -8,12 +8,12 @@ from .decoder import Decoder
 
 
 class SAE(nn.Module):
-    def __init__(self, input: int, latent_factor: int, output: int, layer_norm: bool):
+    def __init__(self, input: int, latent_factor: int, layer_norm: bool):
         super(SAE, self).__init__()
         
         # get layer dimensions
         h1 = pow(2, int(log2(input)) + 1)
-        h2 = 2 * h1 if latent_factor > 2 else 0
+        h2 = 2 * h1 if latent_factor > 2 else h1
         latent = latent_factor * h1
         
         # make models
@@ -23,10 +23,6 @@ class SAE(nn.Module):
 
         self.z = torch.Tensor([])
         
-    def type(self, x):
-        if type(x) is not torch.Tensor:
-            x = torch.from_numpy(x).float()
-        return x
     
     def topk(self, x, k=16):
         top_k_values, _ = torch.topk(x, k)
@@ -36,19 +32,23 @@ class SAE(nn.Module):
         return x * mask
         
     
-    def forward(self, x, **kwargs):
-        topk = kwargs.get("topk", True)
-        x = self.type(x)
+    def forward(self, x, topk):
         x = self.z = self.encoder.forward(x)
         if topk:
             x = self.z = self.topk(x)
         x = self.decoder.forward(x)
         return x
     
-    def encode(self):
-        # forward without decoder
-        pass
+    # forward without decoder
+    def encode(self, x, topk):
+        x = self.type(x)
+        x = self.z = self.encoder.forward(x)
+        if topk:
+            x = self.z = self.topk(x)
+        return x
     
+    
+    ''' For SAE pretraining '''
     def l1_reg(self):
         return torch.sum(torch.abs(self.z))
     

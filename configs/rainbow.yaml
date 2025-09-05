@@ -1,0 +1,33 @@
+algo: sac
+
+env:
+  # env names
+
+actor:
+  lr: 3.0e-4
+  action_scale:
+  model:
+    input: ???
+    latent_factor: ???
+    output: ???
+    layer_norm: bool
+    topk: bool
+
+critic:
+  input: ???
+  hidden: 256
+
+temperature:
+  lr: 3.0e-4
+  state_dim: ???
+
+normalizer:
+  use: True
+  state_dim: ???
+  epsilon: 1.0e-8
+
+buffer:
+  buffer_size: 1000000
+  batch_size: 256
+  state_dim: ???
+  action_dim: ???

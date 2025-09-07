@@ -73,7 +73,7 @@ if __name__ == "__main__":
     norm = True if sys.argv[2].lower() == "true" else False
     
     # initialize models & dataset
-    sae = SAE(348, 4, 348, layer_norm=norm)
+    sae = SAE(348, latent_factor=2, layer_norm=norm)
     dataset = DataLoader(layer_norm=norm)
     
     train(dataset, sae, topk)

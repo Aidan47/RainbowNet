@@ -1,8 +1,6 @@
 from math import log2
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
 from .encoder import Encoder
 from .decoder import Decoder
 
@@ -26,7 +24,7 @@ class SAE(nn.Module):
     
     def topk(self, x, k=16):
         top_k_values, _ = torch.topk(x, k)
-        kth_value = top_k_values[:, -1].unsqueeze(-1)
+        kth_value = top_k_values[..., -1].unsqueeze(-1)
         # a mask to zero out non-top-k values
         mask = (x >= kth_value).float()
         return x * mask
@@ -41,7 +39,6 @@ class SAE(nn.Module):
     
     # forward without decoder
     def encode(self, x, topk):
-        x = self.type(x)
         x = self.z = self.encoder.forward(x)
         if topk:
             x = self.z = self.topk(x)

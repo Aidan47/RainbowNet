@@ -10,8 +10,7 @@ class Encoder(nn.Module):
         
         self.l1 = nn.Linear(input, h1)
         self.l2 = nn.Linear(h1, h2)
-        self.l3 = nn.Linear(h2, h2)
-        self.l4 = nn.Linear(h2, latent)
+        self.l3 = nn.Linear(h2, latent)
         
         self.norm = layer_norm
         if self.norm:
@@ -20,8 +19,7 @@ class Encoder(nn.Module):
     def forward(self, x):
         x = F.relu(self.l1(x))
         x = F.relu(self.l2(x))
-        x = F.relu(self.l3(x))
-        x = self.l4(x)
+        x = self.l3(x)
         if self.norm:
             x = self.normalize(x)
         return F.relu(x)
